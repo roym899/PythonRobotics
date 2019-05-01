@@ -77,13 +77,13 @@ def set_path(paths, lengths, ctypes):
     for tpath in paths:
         typeissame = (tpath.ctypes == path.ctypes)
         if typeissame:
-            if sum(tpath.lengths) - sum(path.lengths) <= 0.01:
+            if sum(np.abs(tpath.lengths)) - sum(np.abs(path.lengths)) < 0.0:
                 return paths  # not insert path
 
     path.L = sum([abs(i) for i in lengths])
 
     # Base.Test.@test path.L >= 0.01
-    if path.L >= 0.01:
+    if path.L >= 0:
         paths.append(path)
 
     return paths
@@ -315,7 +315,7 @@ def generate_local_course(L, lengths, mode, maxc, step_size):
             ind, l, m, maxc, ox, oy, oyaw, px, py, pyaw, directions)
 
     # remove unused data
-    while px[-1] == 0.0:
+    while len(px) > 1 and px[-1] == 0.0:
         px.pop()
         py.pop()
         pyaw.pop()
